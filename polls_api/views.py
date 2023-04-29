@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 # Create your views here.
 from polls.models import Question
@@ -24,8 +24,22 @@ def question_list(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-@api_view(['GET'])
+@api_view(['GET','PUT','DELETE'])
 def question_detail(request, id):
-    question = Question.objects.get(pk=id)
-    serializer = QuestionSerializer(question)
-    return Response(serializer.data)
+    question = get_object_or_404(Question, pk=id)
+    if request.method == 'GET':
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
+    
+    if request.method == 'PUT':
+        serializer = QuestionSerializer(question, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'DELETE':
+        question.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
