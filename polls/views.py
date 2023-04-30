@@ -8,6 +8,7 @@ from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 
+
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:15]
     context = {'questions': latest_question_list}
