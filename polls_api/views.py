@@ -12,6 +12,7 @@ class QuestionList(generics.ListCreateAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 

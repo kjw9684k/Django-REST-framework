@@ -29,7 +29,7 @@ class Question(models.Model):
         return f'{new_badge} 제목: {self.question_text}, 날짜: {self.pub_date}'
         
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
